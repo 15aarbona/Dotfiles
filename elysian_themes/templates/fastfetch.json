@@ -1,0 +1,102 @@
+{
+  "logo": {
+    "type": "command-raw",
+    "source": "pokeget random --hide-name"
+  },
+  "display": {
+    "separator": ":",
+    "key": {
+        "width": 21
+    }
+  },
+  "modules": [
+    {
+      "type": "title",
+      "key": "   System",
+      "color": "{{ colors.ANSI_CYAN }}",
+      "format": "{6} {7} {8}"
+    },
+    {
+      "type": "custom",
+      "format": "┌─────────────────────────────────────────────────────────┐"
+    },
+    {
+      "type": "command",
+      "key": "   OS",
+      "keyColor": "{{ colors.ANSI_BLUE }}",
+      "text": "echo \"$(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"') / $(uname -r)\""
+    },
+    {
+      "type": "display",
+      "key": "  󰍹 Display",
+      "format": "{1}x{2} @ {3}Hz [{7}]",
+      "keyColor": "{{ colors.ANSI_MAGENTA }}"
+    },
+    {
+      "type": "terminal",
+      "key": "   Terminal",
+      "keyColor": "{{ colors.ANSI_MAGENTA }}"
+    },
+    {
+      "type": "command",
+      "key": "   Window Manager",
+      "keyColor": "{{ colors.ANSI_MAGENTA }}",
+      "text": "printf '%s' \"${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-${WAYLAND_DISPLAY:-unknown}}}\""
+    },
+    {
+      "type": "cpu",
+      "format": "{1} @ {7}",
+      "key": "   CPU",
+      "keyColor": "{{ colors.ANSI_RED }}"
+    },
+    {
+      "type": "gpu",
+      "format": "{1} {2}",
+      "key": "  󰊴 GPU",
+      "keyColor": "{{ colors.ANSI_RED }}"
+    },
+    {
+      "type": "gpu",
+      "format": "{3}",
+      "key": "   GPU Driver",
+      "keyColor": "{{ colors.ANSI_WHITE }}"
+    },
+    {
+      "type": "memory",
+      "key": "   Memory",
+      "keyColor": "{{ colors.ANSI_YELLOW }}",
+      "format": "{used} / {total} {percentage-bar}",
+      "percent": {
+          "type": 3,
+          "green": 30,
+          "yellow": 70
+      }
+    },
+    {
+      "type": "disk",
+      "key": "   Disk",
+      "keyColor": "{{ colors.ANSI_YELLOW }}",
+      "format": "{size-used} / {size-total} {size-percentage-bar}",
+      "percent": {
+          "type": 3,
+          "green": 30,
+          "yellow": 70
+      }
+    },
+    {
+      "type": "battery",
+      "key": "  󰂄 Battery",
+      "keyColor": "{{ colors.ANSI_GREEN }}",
+      "format": "{status} {capacity-bar}",
+      "percent": {
+          "type": 2,
+          "yellow": 20,
+          "green": 60
+      }
+    },
+    {
+      "type": "custom",
+      "format": "└─────────────────────────────────────────────────────────┘"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+# yazi/yazi.toml
+
+
+[[opener.vscodium]]
+run   = 'codium %s'
+desc  = "VSCodium"
+block = false
+
+[[opener.edit]]
+run   = '${EDITOR:-vi} %s'
+desc  = "Editor"
+block = true
+
+[[opener.default]]
+run   = 'xdg-open %s'
+desc  = "Default"
+block = false
+
+
+###############
+# DIRECTORIES #
+###############
+[[open.prepend_rules]]
+mime = "inode/directory"
+use  = [ "edit", "vscodium" ]
+
+[[open.prepend_rules]]
+url = "*/"
+use  = [ "edit", "vscodium" ]
+
+######################
+# JSON / IPYNB RULES #
+######################
+[[open.prepend_rules]]
+url = "*.ipynb"
+use = [ "edit", "vscodium" ]
+
+[[open.prepend_rules]]
+mime = "application/json"
+use  = [ "edit", "vscodium" ]
+
+##############
+# TEXT FILES #
+##############
+[[open.prepend_rules]]
+mime = "text/*"
+use  = [ "edit", "vscodium" ]
+
+#############################
+# OTHER APPLICATION/* FILES #
+#############################
+[[open.prepend_rules]]
+mime = "application/octet-stream"
+use  = [ "edit", "vscodium" ]
+
+###########
+# SVG+XML #
+###########
+[[open.prepend_rules]]
+mime = "image/svg+xml"
+use  = [ "default", "edit", "vscodium" ]
+
+###############
+# EMPTY FILES #
+###############
+[[open.prepend_rules]]
+mime = "inode/x-empty"
+use  = [ "edit", "vscodium" ]
+
+[[open.prepend_rules]]
+mime = "inode/empty"
+use  = [ "edit", "vscodium" ]
+
+###########
+# DEFAULT #
+###########
+[[open.prepend_rules]]
+mime = "*/*"
+use  = "default"

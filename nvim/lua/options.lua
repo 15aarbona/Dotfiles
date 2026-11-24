@@ -1,0 +1,85 @@
+-- nvim/lua/options.lua
+
+
+local opt = vim.opt
+
+-- Set color theme
+vim.cmd.colorscheme("elysian")
+
+-- Don't auto-insert comment leader on new lines
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function()
+        opt.formatoptions:remove({ "r", "o", "t" })
+    end,
+})
+
+-- Goto definitions
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        vim.keymap.set('n', 'gd', function()
+            require('goto-preview').goto_preview_definition()
+        end, { buffer = args.buf, desc = 'Go to / preview definition' })
+    end,
+})
+
+-- Line numbers
+opt.number          = true
+opt.relativenumber  = true
+opt.numberwidth     = 5
+
+-- Tabs / indentation
+opt.expandtab   = true
+opt.tabstop     = 4
+opt.softtabstop = 4
+opt.shiftwidth  = 4
+opt.shiftround  = true
+opt.smartindent = true
+
+-- Appearance
+opt.termguicolors   = true
+opt.cursorline      = true
+opt.laststatus      = 2
+opt.showmode        = false   -- lualine handles this
+opt.signcolumn      = "yes"
+
+-- Indentation markers
+opt.list        = true
+opt.listchars   = { leadmultispace = "¦   ", trail = "·" }
+
+-- Folding
+opt.foldmethod  = "expr"
+opt.foldexpr    = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevel   = 99
+
+-- Encoding & file format
+opt.encoding    = "utf-8"
+opt.fileformat  = "unix"
+
+-- Wrapping
+opt.textwidth   = 90
+opt.wrap        = true
+opt.linebreak   = true
+opt.breakindent = true
+opt.showbreak   = "↳ "
+
+-- No swap files
+opt.swapfile    = false
+
+-- Window management
+opt.splitbelow = true
+
+-- Remove trailing whitespace on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function()
+        local pos = vim.api.nvim_win_get_cursor(0)
+        vim.cmd([[%s/\s\+$//e]])
+        vim.api.nvim_win_set_cursor(0, pos)
+    end,
+})
+
+-- User overrides (optional): lua/user/options.lua
+if #vim.api.nvim_get_runtime_file("lua/user/options.lua", false) > 0 then
+    require("user.options")
+end

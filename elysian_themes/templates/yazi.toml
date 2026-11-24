@@ -1,0 +1,35 @@
+# elysian_themes/templates/yazi.toml
+
+
+[mgr]
+cwd = { fg = "{{ colors.ANSI_BLUE }}" }
+find_keyword  = { fg = "{{ colors.WARNING }}",   bold = true, italic = true, underline = true }
+find_position = { fg = "{{ colors.TERTIARY }}", bold = true, italic = true }
+marker_copied = { fg = "{{ colors.SUCCESS_MUTED }}", bg = "{{ colors.SUCCESS_MUTED }}" }
+marker_cut    = { fg = "{{ colors.ANSI_RED }}",   bg = "{{ colors.ANSI_RED }}" }
+marker_marked = { fg = "{{ colors.ANSI_GREEN }}",    bg = "{{ colors.ANSI_GREEN }}" }
+
+[status]
+overall     = { bg = "{{ colors.BG_DARK }}" }
+mode_normal = { fg = "{{ colors.BG }}", bg = "{{ colors.ANSI_BLUE }}",    bold = true }
+mode_select = { fg = "{{ colors.BG }}", bg = "{{ colors.SUCCESS_MUTED }}",   bold = true }
+mode_unset  = { fg = "{{ colors.BG }}", bg = "{{ colors.TERTIARY }}", bold = true }
+
+[input]
+border   = { fg = "{{ colors.ANSI_BLUE }}" }
+title    = { fg = "{{ colors.ACCENT_MUTED }}" }
+value    = { fg = "{{ colors.FG }}" }
+selected = { reversed = true }
+
+[select]
+border   = { fg = "{{ colors.ANSI_BLUE }}" }
+active   = { fg = "{{ colors.SECONDARY }}" }
+inactive = {}
+
+[filetype]
+rules = [
+  { mime = "image/*",         fg = "{{ colors.ANSI_GREEN }}" },
+  { mime = "video/*",         fg = "{{ colors.TERTIARY }}" },
+  { mime = "audio/*",         fg = "{{ colors.TERTIARY }}" },
+  { mime = "application/zip", fg = "{{ colors.URGENT }}" },
+]

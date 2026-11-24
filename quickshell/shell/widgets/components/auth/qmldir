@@ -1,0 +1,5 @@
+# quickshell/shell/widgets/components/auth/qmldir
+
+
+Authenticator 1.0 Authenticator.qml
+AskpassFlow 1.0 AskpassFlow.qml

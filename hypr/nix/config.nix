@@ -1,0 +1,39 @@
+# hypr/nix/config.nix
+
+
+# Home Manager wiring for this module. `cfg` is `programs.dotfiles.modules.hypr`.
+{ lib, cfg, ... }:
+
+let
+    # Same convention as Home Manager's own hyprland module
+    pluginPath = p: if lib.isDerivation p then "${p}/lib/lib${p.pname}.so" else toString p;
+
+    # Plugins first, so extraConfig can configure them
+    initLua =
+        lib.concatMapStrings (p: ''
+            hl.plugin.load("${pluginPath p}")
+        '') cfg.plugins
+        + cfg.extraConfig;
+
+    # user/<file>.lua -> its content.
+    # hyprland.lua requires every one of these, so all must exist even when empty.
+    userFiles = {
+        "autostart.lua"     = cfg.extraAutostart;
+        "env.lua"           = cfg.extraEnv;
+        "init.lua"          = initLua;
+        "input.lua"         = cfg.extraInput;
+        "keybinds.lua"      = cfg.extraKeybinds;
+        "look_and_feel.lua" = cfg.extraLookAndFeel;
+        "monitors.lua"      = cfg.extraMonitors;
+        "variables.lua"     = cfg.extraVariables;
+        "windowrules.lua"   = cfg.extraWindowRules;
+    };
+in
+{
+    home.packages = lib.optional (cfg.package != null) cfg.package;
+
+    xdg.configFile = {
+        "hypr/hyprland.lua".source = ../hyprland.lua;
+        "hypr/default".source      = ../config;
+    } // lib.mapAttrs' (name: text: lib.nameValuePair "hypr/user/${name}" { inherit text; }) userFiles;
+}

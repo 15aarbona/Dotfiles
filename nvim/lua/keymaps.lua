@@ -1,0 +1,95 @@
+-- nvim/lua/keymaps.lua
+
+
+-- Set space as leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+local map = vim.keymap.set
+
+--- Move current line up / down -----------------------------------------------
+map("n",    "<leader>k",    ":m .-2<CR>==",         { desc = "Move line up" })
+map("n",    "<leader>j",    ":m .+1<CR>==",         { desc = "Move line down" })
+
+-- Visual mode (preserves visual block selection and auto-indents)
+map("v",    "<leader>k",    ":m '<-2<CR>gv=gv",     { desc = "Move selection up" })
+map("v",    "<leader>j",    ":m '>+1<CR>gv=gv",     { desc = "Move selection down" })
+
+--- Duplicate line / selection -----------------------------------------------
+map("n",    "<leader>l",    ":t.<CR>",              { desc = "Duplicate line down" })
+map("n",    "<leader>h",    ":t-1<CR>",             { desc = "Duplicate line up" })
+map("v",    "<leader>l",    ":t'><CR>gv",           { desc = "Duplicate selection down" })
+map("v",    "<leader>h",    ":t'<-1<CR>gv",         { desc = "Duplicate selection up" })
+
+--- Selection & Clipboard -----------------------------------------------------
+map("n",    "<leader>a",    "ggVG",                 { desc = "Select all" })
+map("v",    "<leader>y",    '"+y',                  { desc = "Yank to system clipboard" })
+
+--- Indent / un-indent --------------------------------------------------------
+map("v",    "<Tab>",        ">gv",                  { desc = "Indent selection" })
+map("v",    "<S-Tab>",      "<gv",                  { desc = "Un-indent selection" })
+
+--- Window navigation ---------------------------------------------------------
+-- Standard pane navigation
+map("n",    "<C-h>",        "<C-w>h",               { desc = "Focus left window" })
+map("n",    "<C-j>",        "<C-w>j",               { desc = "Focus bottom window" })
+map("n",    "<C-k>",        "<C-w>k",               { desc = "Focus top window" })
+map("n",    "<C-l>",        "<C-w>l",               { desc = "Focus right window" })
+map("t",    "<C-h>",        "<C-\\><C-n><C-w>h",    { desc = "Focus left (terminal)" })
+
+-- Saving and exiting
+map({ "i", "n", "v" },  "<C-s>",    "<cmd>w<CR>",   { desc = "Save file" })
+map({ "n", "v" },       "<C-q>",    "<cmd>q<CR>",   { desc = "Quit window" })
+map({ "n", "v" },       "<C-x>",    "<cmd>x<CR>",   { desc = "Save file and quit window" })
+
+--- Terminal ------------------------------------------------------------------
+map("n",    "<leader>t",    "<cmd>split | resize 10 | term<CR>i",            { desc = "Open terminal" })
+
+-- Move "set mark" from m to M, freeing m for multicursor
+map({ "n", "v" }, "m", "<Nop>", { desc = "Disabled (multicursor prefix)" })
+map("n", "<leader>m", function()
+    local char = vim.fn.getcharstr()
+    if char:match("%u") then
+        vim.notify("Uppercase (global) marks are disabled, use a lowercase letter", vim.log.levels.WARN)
+        return
+    end
+    vim.cmd("normal! m" .. char)
+end, { desc = "Set mark (lowercase only)" })
+
+vim.keymap.set({ "n", "v" }, "gm", function()
+    local char = vim.fn.getcharstr()
+    vim.cmd("normal! `" .. char)
+end, { desc = "Jump to mark (exact position)" })
+
+--- Search & Grep ------------------------------------------------------------
+-- Clear highlights with Esc
+map("n",    "<Esc>",        "<cmd>nohlsearch<CR>",  { desc = "Clear search highlight" })
+
+-- Project search with slash escaping
+map("n", "<leader>F", function()
+    local pattern = vim.fn.input("Search pattern: ")
+    if pattern ~= "" then
+        local escaped = vim.fn.escape(pattern, "/")
+        vim.cmd("vimgrep /" .. escaped .. "/gj **/*")
+        vim.cmd("copen")
+    end
+end, { desc = "Grep in project" })
+
+--- Quickfix list keybinds
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "qf",
+    callback = function()
+        map("n",    "<Esc>",    ":cclose<CR>",  { buffer = true, desc = "Close quickfix" })
+        map("n",    "l",        "<CR><C-w>p",   { buffer = true, desc = "Open entry and return" })
+    end,
+})
+
+--- Diagnostics --------------------------------------------------------------
+map("n",    "gl",   vim.diagnostic.open_float,                          { desc = "Show line diagnostics" })
+map("n",    "]d",   function() vim.diagnostic.jump({ count = 1 }) end,  { desc = "Next diagnostic" })
+map("n",    "[d",   function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Prev diagnostic" })
+
+-- User overrides (optional): lua/user/keymaps.lua
+if #vim.api.nvim_get_runtime_file("lua/user/keymaps.lua", false) > 0 then
+    require("user.keymaps")
+end

@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+# zsh/default/main.zsh
+
+
+setopt HIST_REDUCE_BLANKS   # strip superfluous whitespace from entries
+setopt HIST_VERIFY          # after !! or !$ expansion, show the line before running it
+setopt HIST_NO_STORE        # don't store the `history` command itself
+
+# Save and set last visited directory when closing terminal
+trap "pwd > $HOME/.last_dir" EXIT
+if [ -f "$HOME/.last_dir" ]; then
+	export OLDPWD="$(cat $HOME/.last_dir)"
+fi
+
+# System's command completions must be enabled by user manually.
+# If you use a declarative configuration (like NixOS), do it there.
+# Otherwise, you can create this file and place the commands in it.
+[ -f "$HOME/.config/zsh/enable_completions.zsh" ] && . "$HOME/.config/zsh/enable_completions.zsh"
+
+# Source custom zsh files
+[ -f "$HOME/.config/zsh/alias.zsh" ] && . "$HOME/.config/zsh/alias.zsh"
+[ -f "$HOME/.config/zsh/functions.zsh" ] && . "$HOME/.config/zsh/functions.zsh"
+
+# Source user config files
+CONFIG_DIR="$HOME/.config/zsh/user"
+if [ -d "$CONFIG_DIR" ]; then
+    for script in "$CONFIG_DIR"/*.zsh; do
+        [ -e "$script" ] || continue
+        case "${script##*/}" in
+            env.zsh|profile.zsh) continue ;;  # already sourced by zshenv / zprofile
+        esac
+        [ -r "$script" ] && . "$script" # Source every readable file inside the user directory
+    done
+fi
+
+# Init starship
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init zsh)"
+fi

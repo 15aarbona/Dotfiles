@@ -1,0 +1,95 @@
+# elysian_themes/templates/starship.toml
+
+
+format = """
+╭─\
+[](fg:{{ colors.ACCENT_LOW }})\
+$os$username\
+[](fg:{{ colors.ACCENT_LOW }})\
+[ ](fg:{{ colors.BG_SELECTED }})\
+$directory\
+[](fg:{{ colors.BG_SELECTED }})\
+$fill\
+$git_branch\
+$git_status\
+\n╰──\
+$character"""
+
+[fill]
+symbol = "·"
+style = "fg:{{ colors.FG_HINT }}"
+
+[character]
+success_symbol = "[❯](bold fg:{{ colors.INFO }})"
+error_symbol = "[❯](bold fg:{{ colors.ERROR }})"
+
+[os]
+disabled = false
+style = "bold bg:{{ colors.ACCENT_LOW }} fg:{{ colors.BG_DARK }}"
+
+[os.symbols]
+Arch = " "
+Ubuntu = " "
+Fedora = " "
+NixOS = " "
+Debian = " "
+CachyOS = " "
+
+[hostname]
+ssh_only = false
+trim_at = "."
+style = "bold fg:{{ colors.BG_DARK }} bg:{{ colors.FG_LIGHT }}"
+format = "[$hostname]($style)"
+
+[username]
+show_always = true
+format = "[$user](bold bg:{{ colors.ACCENT_LOW }} fg:{{ colors.BG_DARK }})"
+
+[directory]
+style = "fg:{{ colors.FG_DARK }} bg:{{ colors.BG_SELECTED }}"
+format = "[󰉖 󱦰 $path]($style)"
+truncation_length = 5
+truncation_symbol = "../"
+home_symbol = "~"
+truncate_to_repo = false
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"~" = " "
+
+[git_branch]
+symbol = " "
+style = "bg:{{ colors.BG_SELECTED }}"
+format = '[](fg:{{ colors.BG_SELECTED }})[[ $symbol$branch ](fg:{{ colors.FG_DARK }} bg:{{ colors.BG_SELECTED }})]($style)'
+
+[git_status]
+style = "bg:{{ colors.BG_SELECTED }}"
+format = '[[($all_status$ahead_behind )](fg:{{ colors.FG_DARK }} bg:{{ colors.BG_SELECTED }})]($style)[](fg:{{ colors.BG_SELECTED }})'
+
+[nodejs]
+symbol = " "
+style = "bg:{{ colors.BG_STRIPE }}"
+format = '[[ $symbol ($version) ](fg:{{ colors.FG_DISABLED }} bg:{{ colors.BG_STRIPE }})]($style)'
+
+[rust]
+symbol = " "
+style = "bg:{{ colors.BG_STRIPE }}"
+format = '[[ $symbol ($version) ](fg:{{ colors.FG_DISABLED }} bg:{{ colors.BG_STRIPE }})]($style)'
+
+[golang]
+symbol = " "
+style = "bg:{{ colors.BG_STRIPE }}"
+format = '[[ $symbol ($version) ](fg:{{ colors.FG_DISABLED }} bg:{{ colors.BG_STRIPE }})]($style)'
+
+[php]
+symbol = " "
+style = "bg:{{ colors.BG_STRIPE }}"
+format = '[[ $symbol ($version) ](fg:{{ colors.FG_DISABLED }} bg:{{ colors.BG_STRIPE }})]($style)'
+
+[python]
+symbol = " "
+style = "bg:{{ colors.BG_STRIPE }}"
+format = '[[ $symbol($version) ](bold fg:{{ colors.FG_DISABLED }} bg:{{ colors.BG_STRIPE }})]($style)'
