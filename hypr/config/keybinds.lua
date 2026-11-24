@@ -67,11 +67,6 @@ BIND(   -- dwindle only
     { description = "[Window] Toggle split direction" }
 )
 BIND(
-    Config.mainMod .. " + N",
-    hl.dsp.exec_cmd("hyprctl dispatch movetoworkspacesilent special:minimized"),
-    { description = "[Window] Minimize focused window" }
-)
-BIND(
     Config.mainMod .. " + F",
     hl.dsp.window.fullscreen(),
     { description = "[Window] Toggle fullscreen" }

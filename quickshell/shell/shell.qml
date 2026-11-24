@@ -64,12 +64,6 @@ ShellRoot {
         source: "widgets/ControlMenu.qml"
     }
 
-    Loader {
-        id: minimizedDockLoader
-        active: true
-        source: "widgets/MinimizedDock.qml"
-    }
-
 
     function closeOtherMenus(exceptLoader) {
         if (exceptLoader !== controlMenuLoader)

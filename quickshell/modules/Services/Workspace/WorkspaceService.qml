@@ -20,9 +20,6 @@ Singleton {
     // needs to render, with no Hyprland types leaking out.
     property var states: []
 
-    // Lista reactiva de ventanas en special:minimized
-    property var minimizedWindows: []
-
     function _rebuild() {
         const focusedId = Hyprland.focusedWorkspace?.id ?? 0
         const list = []
@@ -46,28 +43,6 @@ Singleton {
         }
 
         root.states = list
-    }
-
-    function _rebuildMinimized() {
-        const list = []
-        const toplevels = Hyprland.toplevels?.values ?? []
-        for (let i = 0; i < toplevels.length; i++) {
-            const win = toplevels[i]
-            if (win.workspace?.name === "special:minimized") {
-                list.push({
-                    address: win.address,
-                    title:   win.title || win.appId || "App",
-                    appId:   win.appId || ""
-                })
-            }
-        }
-        root.minimizedWindows = list
-    }
-
-    function restoreWindow(address) {
-        const targetWs = Hyprland.focusedWorkspace?.id ?? 1
-        Hyprland.dispatch("movetoworkspace " + targetWs + ",address:0x" + address)
-        Hyprland.dispatch("focuswindow address:0x" + address)
     }
 
     // Pure function, called from a QML binding — property reads inside
@@ -98,27 +73,16 @@ Singleton {
     }
 
     Connections {
-        target: Hyprland.toplevels
-        function onValuesChanged() { root._rebuildMinimized() }
-    }
-
-    Connections {
         target: Hyprland
 
         function onFocusedWorkspaceChanged() { root._rebuild() }
 
         function onRawEvent(event) {
             if (event.name === "workspacev2") root.switched()
-            if (event.name === "movewindow" || event.name === "movewindowv2" ||
-                event.name === "openwindow" || event.name === "closewindow" ||
-                event.name === "windowtitle" || event.name === "windowtitlev2") {
-                root._rebuildMinimized()
-            }
         }
     }
 
     Component.onCompleted: {
         _rebuild()
-        _rebuildMinimized()
     }
 }
